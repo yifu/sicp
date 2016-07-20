@@ -43,6 +43,24 @@
           (iter (next a) (+ (term a) result))))
     (iter a 0))
 
-  (newline) (display "Exercice 1.30") (newline))
+  (define (cube x) (* x x x))
+  (define (simpson-rule-integral f a b n)
+    (define h
+      (/ (- b a) n))
+    (define (term k)
+      (* (f (+ a (* k h)))
+         (cond ((= k 0) 1)
+               ((= k n) 1)
+               ((even? k) 2)
+               (else 4))))
+    (* (/ h 3) (itersum term 0 inc n)))
+
+  (newline) (display "Exercice 1.30") (newline)
+
+  ;; Test cases for itersum:
+  (display (simpson-rule-integral cube 0 1 1)) (newline)
+  (display (simpson-rule-integral cube 0 1 10)) (newline)
+  (display (simpson-rule-integral cube 0 1 100)) (newline)
+  (display (simpson-rule-integral cube 0 1 1000)) (newline))
 
 (exercice-1-30)
