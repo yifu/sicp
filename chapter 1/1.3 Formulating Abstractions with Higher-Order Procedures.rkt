@@ -20,8 +20,6 @@
                ((= k n) 1)
                ((even? k) 2)
                (else 4))))
-
-    (display "h = ") (display h) (newline)
     (* (/ h 3) (sum term 0 inc n)))
 
   (newline) (display "Exercise 1.29") (newline)
@@ -38,7 +36,7 @@
 ;; Exercice 1.30
 ;; Iterative version of sum
 (define (exercice-1-30)
-  (define (sum term a next b)
+  (define (itersum term a next b)
     (define (iter a result)
       (if (> a b)
           result
