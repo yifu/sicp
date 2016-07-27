@@ -216,3 +216,29 @@
   (display (factorial 4)) (newline))
 
 (exercise-1-32)
+
+;; Exercise 1.33
+(#%require math/number-theory)
+(define (exercise-1-33)
+  (define (square n) (* n n))
+  ;(define (identity n) n)
+
+  (define (filtered-accumulate combiner null-value term a next b filter)
+    (if (> a b)
+        null-value
+        (combiner (if (filter a) (term a) null-value) (filtered-accumulate combiner null-value term (next a) next b filter))))
+
+  (define (sum-square-prime a b)
+   (filtered-accumulate + 0 square a inc b prime?))
+
+  (define (product-coprimes-n n)
+    (define (coprime-n? x) (coprime? x n))
+    (filtered-accumulate * 1 identity 1 inc (dec n) coprime-n?))
+
+  (newline) (display "Exercise 1.33") (newline)
+  (display "Compute the sum of squares of prime integers between 0 and 10:") (newline)
+  (display (sum-square-prime 0 10)) (newline)
+  (display "Compute the product of the coprimes of 5") (newline)
+  (display (product-coprimes-n 5)) (newline))
+
+(exercise-1-33)
