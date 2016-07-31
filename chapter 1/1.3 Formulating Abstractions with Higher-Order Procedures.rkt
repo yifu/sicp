@@ -413,3 +413,110 @@
 
   (newline) (display "Exercise 1.39") (newline))
 (exercise-1-39)
+
+;; Exercise 1.40
+(define (exercise-1-40)
+  (define tolerance 0.00001)
+  (define (fixed-point f first-guess)
+    (define (close-enough? a b)
+      (< (abs (- a b)) tolerance))
+    (define (try guess)
+      (display "guess = ") (display guess) (newline)
+      (let ((next-guess (f guess)))
+        (if (close-enough? guess next-guess)
+            next-guess
+            (try next-guess))))
+    (try first-guess))
+
+  (define dx 0.00001)
+
+  (define (deriv f)
+    (lambda (x)
+      (/ (- (f (+ x dx)) (f x)) dx)))
+
+  (define (newton-transform f)
+    (lambda (x) (- x (/ (f x) ((deriv f) x)))))
+
+  (define (newton-method f first-guess)
+    (fixed-point (newton-transform f) first-guess))
+
+  (define (cubic a b c)
+    (lambda (x) (+ (* x x x) (* a x x) (* b x) c)))
+
+  (newline) (display "Exercise 1.40") (newline)
+  ;((newton-transform  (cubic 1 1 1)) 1.0)
+  (display (newton-method (cubic 0 0 0) 1.0)) (newline))
+(exercise-1-40)
+
+;; Exercise 1.41
+(define (exercise-1-41)
+
+;  (define (plus1 x)
+;    (display "here") (newline)
+;    (inc x))
+
+  (define (double f)
+    (lambda (x)
+      (f (f x))))
+
+  (newline) (display "Exercise 1.41") (newline)
+  ;(display ((double inc) 5)) (newline)
+  ;(display (((double double) inc) 5)) (newline)
+  ;(display ((double (double (double inc))) 5)) (newline)
+  (display (((double (double double)) inc) 5)) (newline))
+(exercise-1-41)
+
+;; Exercise 1.42
+(define (exercise-1-42)
+
+  (define (square x) (* x x))
+
+  (define (compose f g)
+    (lambda (x) (f (g x))))
+
+  (newline) (display "Exercise 1.42") (newline)
+  (display ((compose square inc) 6)) (newline))
+(exercise-1-42)
+
+;; Exercise 1.43
+(define (exercise-1-43)
+
+  (define (square x) (* x x))
+
+  (define (compose f g)
+    (lambda (x) (f (g x))))
+
+  (define (repeated f n)
+    (if (= n 0)
+        (lambda (x) x)
+        (compose f (repeated f (dec n)))))
+
+  (newline) (display "Exercise 1.43") (newline)
+  (display ((repeated square 2) 5)) (newline))
+(exercise-1-43)
+
+;; Exercise 1.44
+(define (exercise-1-44)
+
+  (define (square x) (* x x))
+
+  (define (compose f g)
+    (lambda (x) (f (g x))))
+
+  (define (repeated f n)
+    (if (= n 0)
+        (lambda (x) x)
+        (compose f (repeated f (dec n)))))
+
+  (define (smooth f)
+    (define (average a b c)
+      (/ (+ a b c) 3))
+    (define dx 0.00001)
+    (lambda (x)
+      (average (f (- x dx))
+               (f x)
+               (f (+ x dx)))))
+
+  (newline) (display "Exercise 1.44") (newline)
+  (display (((repeated smooth 10) square) 5)) (newline))
+(exercise-1-44)
