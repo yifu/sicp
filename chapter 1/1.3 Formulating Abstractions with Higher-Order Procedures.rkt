@@ -132,7 +132,6 @@
 
 (exercise-1-31)
 
-
 ;; Exercise 1.32
 (define (exercise-1-32)
   (define (identity x) x)
@@ -242,3 +241,175 @@
   (display (product-coprimes-n 5)) (newline))
 
 (exercise-1-33)
+
+;; Exercise 1.34
+(define (exercise-1-34)
+  (define (square n) (* n n))
+
+  (define (f g)
+    (g 2))
+
+  (newline) (display "Exercise 1.34") (newline)
+  (display (f square)) (newline)
+  (display (f (lambda (x) (* x (+ x 1))))) (newline)
+;  (f f)
+  )
+
+;; Exercise 1.35
+(define (exercise-1-35)
+  (define (square n) (* n n))
+  (define tolerance 0.00001)
+  (define (fixed-point f first-guess)
+    (define (close-enough? a b)
+      (< (abs (- a b)) tolerance))
+    (define (try guess)
+      (let ((next-guess (f guess)))
+        (if (close-enough? guess next-guess)
+            next-guess
+            (try next-guess))))
+    (try first-guess))
+
+  (newline) (display "Exercise 1.35") (newline)
+  (fixed-point (lambda (x) (+ 1 (/ 1 x))) 1))
+(exercise-1-35)
+
+;; Exercise 1.36
+(define (exercise-1-36)
+  (define (square n) (* n n))
+  (define tolerance 0.00001)
+  (define (fixed-point f first-guess)
+    (define (close-enough? a b)
+      (< (abs (- a b)) tolerance))
+    (define (try guess)
+      (display "guess = ") (display guess) (newline)
+      (let ((next-guess (f guess)))
+        (if (close-enough? guess next-guess)
+            next-guess
+            (try next-guess))))
+    (try first-guess))
+
+  (newline) (display "Exercise 1.36") (newline)
+  (display "Fixed point without dampening") (newline)
+  (display (fixed-point (lambda (x) (/ (log 1000) (log x))) 2)) (newline)
+
+  (let ((result (fixed-point (lambda (x) (/ (+ x (/ (log 1000) (log x))) 2)) 2)))
+    (display "Fixed point with dampening") (newline)
+    (display "result = ") (display result) (newline)
+    (display "verif = ") (display (expt result result)) (newline)))
+(exercise-1-36)
+
+;; Exercise 1.37
+(define (exercise-1-37)
+;  (define (cont-frac n d k)
+;    (if (= k 1)
+;        (/ (n 1) (d 1))
+;        (/ (n k) (+ (d k) (cont-frac n d (dec k))))))
+  (define (cont-frac n d k)
+    (define (recur i)
+      (if (> i k)
+          0
+          (/ (n i) (+ (d i) (recur (inc i))))))
+    (recur 1))
+
+  (define (cont-frac-iter n d k)
+    (define (iter k acc)
+      (if (= k 1)
+          (/ (n 1) (+ (d 1) acc))
+          (iter (dec k) (/ (n k) (+ (d k) acc)))))
+    (iter k 0))
+
+  (newline) (display "Exercise 1.37") (newline)
+  (display "Testing recursive process") (newline)
+  (display "k = 1, result = ") (display (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 1)) (newline)
+  (display "k = 2, result = ") (display (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 2)) (newline)
+  (display "k = 3, result = ") (display (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 3)) (newline)
+  (display "k = 4, result = ") (display (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 4)) (newline)
+  (display "k = 5, result = ") (display (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 5)) (newline)
+  (display "k = 6, result = ") (display (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 6)) (newline)
+  (display "k = 7, result = ") (display (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 7)) (newline)
+  (display "k = 8, result = ") (display (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 8)) (newline)
+  (display "k = 9, result = ") (display (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 9)) (newline)
+  (display "k = 10, result = ") (display (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 10)) (newline)
+  (display "k = 11, result = ") (display (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 11)) (newline)
+  (display "k = 12, result = ") (display (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 12)) (newline)
+  (display "k = 13, result = ") (display (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 13)) (newline)
+  (display "k = 14, result = ") (display (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 14)) (newline)
+  (display "Testing iterative process") (newline)
+  (display "k = 1, result = ") (display (cont-frac-iter (lambda (i) 1.0) (lambda (i) 1.0) 1)) (newline)
+  (display "k = 2, result = ") (display (cont-frac-iter (lambda (i) 1.0) (lambda (i) 1.0) 2)) (newline)
+  (display "k = 3, result = ") (display (cont-frac-iter (lambda (i) 1.0) (lambda (i) 1.0) 3)) (newline)
+  (display "k = 4, result = ") (display (cont-frac-iter (lambda (i) 1.0) (lambda (i) 1.0) 4)) (newline)
+  (display "k = 5, result = ") (display (cont-frac-iter (lambda (i) 1.0) (lambda (i) 1.0) 5)) (newline)
+  (display "k = 6, result = ") (display (cont-frac-iter (lambda (i) 1.0) (lambda (i) 1.0) 6)) (newline)
+  (display "k = 7, result = ") (display (cont-frac-iter (lambda (i) 1.0) (lambda (i) 1.0) 7)) (newline)
+  (display "k = 8, result = ") (display (cont-frac-iter (lambda (i) 1.0) (lambda (i) 1.0) 8)) (newline)
+  (display "k = 9, result = ") (display (cont-frac-iter (lambda (i) 1.0) (lambda (i) 1.0) 9)) (newline)
+  (display "k = 10, result = ") (display (cont-frac-iter (lambda (i) 1.0) (lambda (i) 1.0) 10)) (newline)
+  (display "k = 11, result = ") (display (cont-frac-iter (lambda (i) 1.0) (lambda (i) 1.0) 11)) (newline)
+  (display "k = 12, result = ") (display (cont-frac-iter (lambda (i) 1.0) (lambda (i) 1.0) 12)) (newline)
+  (display "k = 13, result = ") (display (cont-frac-iter (lambda (i) 1.0) (lambda (i) 1.0) 13)) (newline)
+  (display "k = 14, result = ") (display (cont-frac-iter (lambda (i) 1.0) (lambda (i) 1.0) 14)) (newline))
+(exercise-1-37)
+
+;; Exercise 1.38
+(define (exercise-1-38)
+  (define (cont-frac n d k)
+    (define (recur i)
+      (if (> i k)
+          0
+          (/ (n i) (+ (d i) (recur (inc i))))))
+    (recur 1))
+
+  (define (cont-frac-iter n d k)
+    (define (iter k acc)
+      (if (= k 1)
+          (/ (n 1) (+ (d 1) acc))
+          (iter (dec k) (/ (n k) (+ (d k) acc)))))
+    (iter k 0))
+
+  (define (n k) 1.0)
+  (define (d k)
+    (if (= (remainder k 3) 2)
+        (* 2/3 (/ (inc k) 1))
+        1))
+
+  (newline) (display "Exercise 1.38") (newline)
+  (display (cont-frac-iter n d 1)) (newline)
+  (display (cont-frac-iter n d 2)) (newline)
+  (display (cont-frac-iter n d 3)) (newline)
+  (display (cont-frac-iter n d 4)) (newline)
+  (display (cont-frac-iter n d 5)) (newline)
+  (display (cont-frac-iter n d 6)) (newline)
+  (display (cont-frac-iter n d 7)) (newline)
+  (display (cont-frac-iter n d 8)) (newline)
+  (display (cont-frac-iter n d 9)) (newline)
+  (display (cont-frac-iter n d 10)) (newline))
+(exercise-1-38)
+
+;; Exercise 1.39
+(define (exercise-1-39)
+  (define (cont-frac n d k)
+    (define (recur i)
+      (if (> i k)
+          0
+          (/ (n i) (+ (d i) (recur (inc i))))))
+    (recur 1))
+
+  (define (cont-frac-iter n d k)
+    (define (iter k acc)
+      (if (= k 1)
+          (/ (n 1) (+ (d 1) acc))
+          (iter (dec k) (/ (n k) (+ (d k) acc)))))
+    (iter k 0))
+
+  (define (tan-cf x k)
+    (define (n i)
+      (if (= i 1)
+          x
+          (- (* x x))))
+    (define (d i)
+      (dec (* i 2)))
+    (cont-frac-iter n d k))
+
+  (newline) (display "Exercise 1.39") (newline))
+(exercise-1-39)
