@@ -520,3 +520,50 @@
   (newline) (display "Exercise 1.44") (newline)
   (display (((repeated smooth 10) square) 5)) (newline))
 (exercise-1-44)
+
+;; Exercise 1.45
+(define (exercise-1-45)
+  (define (square n) (* n n))
+  (define (cube n) (* n n n))
+  (define (avg a b) (/ (+ a b) 2))
+
+  (define (avg-damp f)
+    (lambda (x) (avg x (f x))))
+
+  (define tolerance 0.00001)
+  (define (fixed-point f first-guess)
+    (define (close-enough? a b)
+      (< (abs (- a b)) tolerance))
+    (define (try guess)
+      (let ((next-guess (f guess)))
+        (if (close-enough? guess next-guess)
+            next-guess
+            (try next-guess))))
+    (try first-guess))
+
+  (define (compose f g)
+    (lambda (x) (f (g x))))
+
+  (define (repeated f n)
+    (if (= n 0)
+        (lambda (x) x)
+        (compose f (repeated f (dec n)))))
+
+  (define (n-root y n)
+    (cond ((= n 1) y)
+          ((= n 2) (fixed-point (avg-damp (lambda (x) (/ y (expt x (dec n))))) 1.0))
+          (else (fixed-point ((repeated avg-damp (- n 2)) (lambda (x) (/ y (expt x (dec n))))) 1.0))))
+
+  (newline) (display "Exercise 1.45") (newline)
+  (display (fixed-point (lambda (x) (avg x (/ 9 x))) 1.0)) (newline)
+  (display (fixed-point (lambda (x) (avg x (/ 27 (square x)))) 1.0)) (newline)
+  (display (fixed-point (lambda (x) (avg x (avg x (/ 81 (cube x))))) 1.0)) (newline)
+  (display (fixed-point (lambda (x) (avg x (avg x (avg x (/ 243 (expt x 4)))))) 1.0)) (newline)
+  (display (fixed-point (lambda (x) (avg x (avg x (avg x (avg x (/ 729 (expt x 5))))))) 1.0)) (newline)
+  (display "Test n-root:") (newline)
+  (display (n-root 9 2)) (newline)
+  (display (n-root 27 3)) (newline)
+  (display (n-root 81 4)) (newline)
+  (display (n-root 243 5)) (newline)
+  (display (n-root 729 6)) (newline))
+(exercise-1-45)
