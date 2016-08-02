@@ -567,3 +567,35 @@
   (display (n-root 243 5)) (newline)
   (display (n-root 729 6)) (newline))
 (exercise-1-45)
+
+;; Exercise 1.46
+(define (exercise-1-46)
+  (define (iterative-improve good-enough? improve-guess)
+    (lambda (guess)
+      (define (iter guess)
+        (let ((next-guess (improve-guess guess)))
+          (if (good-enough? guess next-guess)
+              next-guess
+              (iter next-guess))))
+      (iter guess)))
+
+  (define (sqrt x)
+    (define (good-enough? guess next-guess)
+      (< (abs (- guess next-guess)) 0.00001))
+    (define (improve-guess guess)
+      (define (avg a b)
+        (/ (+ a b) 2))
+      (avg guess (/ x guess)))
+    ((iterative-improve good-enough? improve-guess) 1.0))
+
+  (define (fixed-point f)
+    (define (good-enough? guess next-guess)
+      (< (abs (- guess next-guess)) 0.00001))
+    ((iterative-improve good-enough? f) 1.0))
+
+  (newline) (display "Exercise 1.46") (newline)
+  (display "sqrt 9 = ") (display (sqrt 9.0)) (newline)
+  (display "sqrt 25 = ") (display (sqrt 25)) (newline)
+  (display "Fixed point of cos is ") (display (fixed-point cos)) (newline)
+  (display "Fixed point of sin x + cos x is ") (display (fixed-point (lambda (x) (+ (sin x) (cos x))))) (newline))
+(exercise-1-46)
