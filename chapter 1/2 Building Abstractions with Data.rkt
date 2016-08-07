@@ -104,3 +104,54 @@
     (display (area-rectangle rect)) (newline))
   (newline))
 (exercise-2-3)
+
+(define (exercise-2-4)
+  (define (cons x y)
+    (lambda (m) (m x y)))
+
+  (define (car p)
+    (p (lambda (x y) x)))
+
+  (define (cdr p)
+    (p (lambda (x y) y)))
+
+  (display "exercise 2.4") (newline)
+  (display "(car (cons 1 2)) = ") (display (car (cons 1 2))) (newline)
+  (display "(cdr (cons 1 2)) = ") (display (cdr (cons 1 2))) (newline)
+  (newline))
+(exercise-2-4)
+
+(define (exercise-2-5)
+  (define (cons x y)
+    (* (expt 2 x) (expt 3 y)))
+
+  (define (car p)
+    (if (not (= (remainder p 2) 0))
+        0
+        (inc (car (/ p 2)))))
+
+  (define (cdr p)
+    (if (not (= (remainder p 3) 0))
+        0
+        (inc (cdr (/ p 3)))))
+
+  (display "exercise 2.5") (newline)
+  (display "(car (cons 1 2)) = ") (display (car (cons 1 2))) (newline)
+  (display "(cdr (cons 1 2)) = ") (display (cdr (cons 1 2))) (newline)
+
+  (display "(car (cons 5 20)) = ") (display (car (cons 5 20))) (newline)
+  (display "(cdr (cons 5 20)) = ") (display (cdr (cons 5 20))) (newline)
+
+  (display "(car (cons 10 6)) = ") (display (car (cons 10 6))) (newline)
+  (display "(cdr (cons 10 6)) = ") (display (cdr (cons 10 6))) (newline)
+
+  (display "(car (cons 0 0)) = ") (display (car (cons 0 0))) (newline)
+  (display "(cdr (cons 0 0)) = ") (display (cdr (cons 0 0))) (newline)
+
+  (display "(car (cons 0 1)) = ") (display (car (cons 0 1))) (newline)
+  (display "(cdr (cons 0 1)) = ") (display (cdr (cons 0 1))) (newline)
+
+  (display "(car (cons 1 0)) = ") (display (car (cons 1 0))) (newline)
+  (display "(cdr (cons 1 0)) = ") (display (cdr (cons 1 0))) (newline)
+  (newline))
+(exercise-2-5)
