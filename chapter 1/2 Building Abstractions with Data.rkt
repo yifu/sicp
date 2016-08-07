@@ -155,3 +155,55 @@
   (display "(cdr (cons 1 0)) = ") (display (cdr (cons 1 0))) (newline)
   (newline))
 (exercise-2-5)
+
+(define (exercise-2-6)
+  (define zero (lambda (f) (lambda (x) x)))
+  (define (add-1 n)
+    (lambda (f) (lambda (x) (f ((n f) x)))))
+
+  ;;(define one (lambda (f) (lambda (x) (f (f x)))))
+  ;;(define two (lambda (f) (lambda (x) (f (lambda (x) (f (f f))) x))))
+
+  ;(add-1 zero)
+  ;(lambda (f) (lambda (x) (f ((zero f) x))))
+  ;(lambda (f) (lambda (x) (f (((lambda (f) (lambda (x) x)) f) x))))
+  ;(lambda (f) (lambda (x) (f ((lambda (x) x) x))))
+  ;(lambda (f) (lambda (x) (f x)))
+  (define one (lambda (f) (lambda (x) (f x))))
+
+  ;(add-1 one)
+  ;((lambda (f) (lambda (x) (f ((n f) x)))) one)
+  ;(lambda (f) (lambda (x) (f ((one f) x))))
+  ;(lambda (f) (lambda (x) (f (((lambda (f) (lambda (x) (f x))) f) x))))
+  ;(lambda (f) (lambda (x) (f (f x))))
+  (define two (lambda (f) (lambda (x) (f (f x)))))
+
+  ;; ...
+  (define three (lambda (f) (lambda (x) (f (f (f x))))))
+
+  ;(define three-v2 (lambda (f) (lambda (x) ((two f) ((one f) x)))))
+  ;(lambda (f) (lambda (x) ((two f) ((one f) x))))
+  ;(lambda (f) (lambda (x) ((two f) (((lambda (f1) (lambda (x1) (f1 x1))) f) x))))
+  ;(lambda (f) (lambda (x) ((two f) ((lambda (x1) (f x1)) x))))
+  ;(lambda (f) (lambda (x) ((two f) (f x))))
+  ;(lambda (f) (lambda (x) ((lambda (x1) (f (f x1))) (f x))))
+  ;(lambda (f) (lambda (x) (f (f (f x)))))
+  (define three-v2 (lambda (f) (lambda (x) ((two f) ((one f) x)))))
+
+  ; (plus a b) is somehow a generalisation of (add-1 n).
+  ; It 'applies' f to parameters, 'applies' x to the second paramater,
+  ; and this result is 'applied' to the first parameter.
+  (define (plus a b)
+    (lambda (f) (lambda (x) ((a f) ((b f) x)))))
+
+  (define (square x) (* x x))
+
+  (display "exercise 2.6") (newline)
+  ;(display "test = ") (display (add-1 zero)) (newline)
+  ;(display "plus = ") (display (plus two one)) (newline)
+  (display "test = ") (display ((three square) 3)) (newline)
+  (display "verif = ") (display (square (square (square 3)))) (newline)
+  (display "test three-v2 = ") (display ((three-v2 square) 3)) (newline)
+  (display "test plus = ") (display (((plus two one) square) 3)) (newline)
+  (newline))
+(exercise-2-6)
