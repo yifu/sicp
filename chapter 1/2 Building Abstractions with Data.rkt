@@ -207,3 +207,63 @@
   (display "test plus = ") (display (((plus two one) square) 3)) (newline)
   (newline))
 (exercise-2-6)
+
+(define (exercise-2-7)
+  (define (make-interval a b) (cons a b))
+  (define (lower-bound interval) (car interval))
+  (define (upper-bound interval) (cdr interval))
+  (display "exercise 2.7") (newline)
+  (newline))
+(exercise-2-7)
+
+(define (exercise-2-8)
+  (define (make-interval a b) (cons a b))
+  (define (lower-bound interval) (car interval))
+  (define (upper-bound interval) (cdr interval))
+
+  (define (add-interval x y)
+    (make-interval (+ (lower-bound x) (lower-bound y))
+                   (+ (upper-bound y) (upper-bound y))))
+
+  (define (sub-interval x y)
+    (add-interval x (make-interval (- (upper-bound y)) (- (lower-bound y)))))
+  (display "exercise 2.8") (newline)
+  (newline))
+(exercise-2-8)
+
+(define (exercise-2-10)
+  (define (make-interval a b) (cons a b))
+  (define (lower-bound interval) (car interval))
+  (define (upper-bound interval) (cdr interval))
+
+  (define (add-interval x y)
+    (make-interval (+ (lower-bound x) (lower-bound y))
+                   (+ (upper-bound y) (upper-bound y))))
+
+  (define (sub-interval x y)
+    (add-interval x (make-interval (- (upper-bound y)) (- (lower-bound y)))))
+
+  (define (mul-interval x y)
+    (let ((p1 (* (lower-bound x) (lower-bound y)))
+          (p2 (* (lower-bound x) (upper-bound y)))
+          (p3 (* (upper-bound x) (lower-bound y)))
+          (p4 (* (upper-bound x) (upper-bound y))))
+      (make-interval (min p1 p2 p3 p4) (max p1 p2 p3 p4))))
+
+  (define (div-interval x y)
+    (define (span-over-0-interval? x)
+      (and (< (lower-bound x) 0) (> (upper-bound x) 0)))
+
+    (if (span-over-0-interval? y)
+        (display "div-interval cannot divide by an interval which spans over 0.")
+        (mul-interval x (make-interval (/ 1 (upper-bound y)) (/ 1 (lower-bound y))))))
+
+  (display "exercise 2.10") (newline)
+  (newline))
+(exercise-2-10)
+
+(define (exercise-2-11)
+
+  (display "exercise 2.11") (newline)
+  (newline))
+(exercise-2-11)
