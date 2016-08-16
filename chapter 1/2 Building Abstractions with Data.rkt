@@ -253,7 +253,6 @@
   (define (div-interval x y)
     (define (span-over-0-interval? x)
       (and (< (lower-bound x) 0) (> (upper-bound x) 0)))
-
     (if (span-over-0-interval? y)
         (display "div-interval cannot divide by an interval which spans over 0.")
         (mul-interval x (make-interval (/ 1 (upper-bound y)) (/ 1 (lower-bound y))))))
@@ -267,3 +266,173 @@
   (display "exercise 2.11") (newline)
   (newline))
 (exercise-2-11)
+
+(define (exercise-2-12)
+  (define (make-interval a b) (cons a b))
+  (define (lower-bound interval) (car interval))
+  (define (upper-bound interval) (cdr interval))
+
+  (define (make-center-width c w)
+    (make-interval (- c w) (+ c w)))
+  (define (center i)
+    (/ (+ (lower-bound i) (upper-bound i)) 2))
+  (define (width i)
+    (/ (- (upper-bound i) (lower-bound i)) 2))
+
+  (define (make-center-percent center percent)
+    (let ((w (/ (* center percent) 100)))
+      (let ((lower (- center w))
+            (upper (+ center w)))
+        (make-interval lower upper))))
+
+  (define (percent i)
+    (let ((w (width i))
+          (c (center i)))
+      (/ (* (/ w 2) 100) c)))
+
+  (display "exercise 2.12") (newline)
+  (newline))
+(exercise-2-12)
+
+
+(define (exercise-2-14)
+  (define (make-interval a b) (cons a b))
+  (define (lower-bound interval) (car interval))
+  (define (upper-bound interval) (cdr interval))
+
+  (define (add-interval x y)
+    (make-interval (+ (lower-bound x) (lower-bound y))
+                   (+ (upper-bound y) (upper-bound y))))
+
+  (define (sub-interval x y)
+    (add-interval x (make-interval (- (upper-bound y)) (- (lower-bound y)))))
+
+  (define (mul-interval x y)
+    (let ((p1 (* (lower-bound x) (lower-bound y)))
+          (p2 (* (lower-bound x) (upper-bound y)))
+          (p3 (* (upper-bound x) (lower-bound y)))
+          (p4 (* (upper-bound x) (upper-bound y))))
+      (make-interval (min p1 p2 p3 p4) (max p1 p2 p3 p4))))
+
+  (define (div-interval x y)
+    (define (span-over-0-interval? x)
+      (and (< (lower-bound x) 0) (> (upper-bound x) 0)))
+    (if (span-over-0-interval? y)
+        (display "div-interval cannot divide by an interval which spans over 0.")
+        (mul-interval x (make-interval (/ 1 (upper-bound y)) (/ 1 (lower-bound y))))))
+
+  (define (make-center-width c w)
+    (make-interval (- c w) (+ c w)))
+  (define (center i)
+    (/ (+ (lower-bound i) (upper-bound i)) 2))
+  (define (width i)
+    (/ (- (upper-bound i) (lower-bound i)) 2))
+
+  (define (make-center-percent center percent)
+    (let ((w (/ (* center percent) 100)))
+      (let ((lower (- center w))
+            (upper (+ center w)))
+        (make-interval lower upper))))
+
+  (define (percent i)
+    (let ((w (width i))
+          (c (center i)))
+      (/ (* (/ w 2) 100) c)))
+
+  (define (print-interval i)
+    (display "(")
+    (display (lower-bound i))
+    (display ", ")
+    (display (upper-bound i))
+    (display ")"))
+
+  (define (par1 r1 r2)
+    (div-interval (mul-interval r1 r2)
+                  (add-interval r1 r2)))
+
+  (define (par2 r1 r2)
+    (let ((one (make-interval 1 1)))
+      (div-interval one
+                    (add-interval (div-interval one r1)
+                                  (div-interval one r2)))))
+
+  (display "exercise 2.14") (newline)
+  (print-interval (make-interval 1 1)) (newline)
+  (print-interval (div-interval (make-interval 13 13.25) (make-interval 13 13.25))) (newline)
+  (print-interval (par1 (make-interval 13 13.25) (make-interval 16 16.25))) (newline)
+  (print-interval (par2 (make-interval 13 13.25) (make-interval 16 16.25))) (newline)
+  (newline))
+(exercise-2-14)
+
+(define (exercise-2-17)
+  (define (last-pair l)
+    (if (null? (cdr l))
+        l
+        (last-pair (cdr l))))
+
+  (display "exercise 2.17") (newline)
+  (display "test:") (display (last-pair (list 1 2 3 4))) (newline)
+  (newline))
+(exercise-2-17)
+
+(define (exercise-2-18)
+  (define (reverse l)
+    (define (iter l acc)
+      (if (null? l)
+          acc
+          (iter (cdr l) (cons (car l) acc))))
+    (iter l nil))
+
+  (display "exercise 2.18") (newline)
+  (display "test: ") (display (reverse (list 1 2 3 4))) (newline)
+  (newline))
+(exercise-2-18)
+
+(define (exercise-2-19)
+  (define (reverse l)
+    (define (iter l acc)
+      (if (null? l)
+          acc
+          (iter (cdr l) (cons (car l) acc))))
+    (iter l nil))
+
+  (define (no-more? l) (null? l))
+  (define (except-first-denomination l) (cdr l))
+  (define (first-denomination l) (car l))
+
+  (define (cc amount coin-values)
+    (cond ((= amount 0) 1)
+          ((or (< amount 0) (no-more? coin-values)) 0)
+          (else
+           (+ (cc amount (except-first-denomination coin-values))
+              (cc (- amount (first-denomination coin-values)) coin-values)))))
+
+  (define us-coins (list 50 25 10 5 1))
+  ;(define us-coins (list 50 1 10 5 25))
+  (define uk-coins (list 100 50 20 10 5 2 1 0.5))
+
+  (display "exercise 2.19") (newline)
+  (display "cc 100 us-coins: ") (display (cc 100 us-coins)) (newline)
+  (display "cc 100 uk-coins: ") (display (cc 100 uk-coins)) (newline)
+  (newline))
+(exercise-2-19)
+
+(define (exercise-2-20)
+  (define (same-parity . l)
+    (define (even? n)
+      (= (remainder n 2) 0))
+    (define (odd? n)
+      (not (even? n)))
+    (define (filter test? l)
+      (cond ((null? l) nil)
+            ((test? (car l)) (cons (car l) (filter test? (cdr l))))
+            (else (filter test? (cdr l)))))
+    (cond ((null? l) nil)
+          ((even? (car l)) (filter even? l))
+          (else (filter odd? l))))
+
+  (display "exercise 2.20") (newline)
+  (display "test 2 3 4 5 6 7: ") (display (same-parity 2 3 4 5 6 7)) (newline)
+  (display "test 3 4 5 6 7: ") (display (same-parity 3 4 5 6 7)) (newline)
+  (newline))
+(exercise-2-20)
