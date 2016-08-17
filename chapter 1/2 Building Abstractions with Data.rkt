@@ -436,3 +436,83 @@
   (display "test 3 4 5 6 7: ") (display (same-parity 3 4 5 6 7)) (newline)
   (newline))
 (exercise-2-20)
+
+(define (exercise-2-21)
+
+  (define (square x) (* x x))
+
+  (define (square-list-1 l)
+    (if (null? l)
+        nil
+        (cons (square (car l)) (square-list-1 (cdr l)))))
+
+  (define (square-list-2 l)
+    (map square l))
+
+  (display "exercise 2.21") (newline)
+  (display "test (square-list-1 (list 1 2 3 4)): ") (display (square-list-1 (list 1 2 3 4))) (newline)
+  (display "test (square-list-2 (list 1 2 3 4)): ") (display (square-list-2 (list 1 2 3 4))) (newline)
+  (newline))
+(exercise-2-21)
+
+(define (exercise-2-23)
+
+  (define (for-each f l)
+    (map f l))
+
+  (display "exercise 2.23") (newline)
+  (display "test (for-each (lambda (x) (newline) (display x)) (list 1 2 3 4)): ")
+
+  (for-each (lambda (x) (newline) (display x)) (list 1 2 3 4))
+  ;(for-each (lambda (x) (newline) (display x)) nil)
+
+  (newline)
+  (newline))
+(exercise-2-23)
+
+(define (exercise-2-25)
+
+  (display "exercise 2.25") (newline)
+  (display (cadr (caddr (list 1 3 (list 5 7) 9)))) (newline)
+  (display (caar (list (list 7)))) (newline)
+  (display (cadr (cadr (cadr (cadr (cadr (cadr (list 1 (list 2 (list 3 (list 4 (list 5 (list 6 7))))))))))))) (newline)
+  (newline))
+(exercise-2-25)
+
+(define (exercise-2-27)
+  (define (reverse l)
+    (define (iter l acc)
+      (if (null? l)
+          acc
+          (iter (cdr l) (cons (car l) acc))))
+    (iter l nil))
+
+  (define (deep-reverse tree)
+    (cond ((null? tree) nil)
+          ((not (pair? tree)) tree)
+          (else (map deep-reverse (reverse tree)))))
+
+  (display "exercise 2.27") (newline)
+  (display (deep-reverse (list (list 1 2) (list 3 4)))) (newline)
+  (display (deep-reverse (list (list 1 (list (list 23 45) (list 78 (list 1 2 3 4)) 6 (list 6 7 8 9 10))) (list 3 4)))) (newline)
+  (newline))
+(exercise-2-27)
+
+(define (exercise-2-28)
+  (define (reduce f l acc)
+    (if (null? l)
+        acc
+        (reduce f (cdr l) (f acc (car l)))))
+
+  (define (fringe tree)
+    (cond ((null? tree) nil)
+          ((not (pair? tree)) (list tree))
+          (else (reduce append (map fringe tree) nil))))
+
+  (display "exercise 2.28") (newline)
+  (display (reduce append (list (list 1 2) (list 3 4)) nil)) (newline)
+  (display (fringe (list (list 1 2) (list 3 4)))) (newline)
+  (display (fringe (list 1 2 3 4))) (newline)
+  (display (fringe (list 1 (list 2 (list 3 4) (list 5 6)) (list 7 (list 8))))) (newline)
+  (newline))
+(exercise-2-28)
