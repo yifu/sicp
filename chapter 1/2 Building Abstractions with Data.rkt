@@ -516,3 +516,125 @@
   (display (fringe (list 1 (list 2 (list 3 4) (list 5 6)) (list 7 (list 8))))) (newline)
   (newline))
 (exercise-2-28)
+
+(define (exercise-2-29)
+  (define (make-mobile left right)
+    (list left right))
+
+  (define (make-branch length structure)
+    (list length structure))
+
+  (define (left-branch mobile)
+    (car mobile))
+  (define (right-branch mobile)
+    (cadr mobile))
+  (define (branch-length branch)
+    (car branch))
+  (define (branch-structure branch)
+    (cadr branch))
+
+  (define (total-branch-weight branch)
+    (if (number? (branch-structure branch))
+        (branch-structure branch)
+        (total-weight (branch-structure branch))))
+
+  (define (total-weight mobile)
+    (+ (total-branch-weight (left-branch mobile))
+       (total-branch-weight (right-branch mobile))))
+
+  (define (balanced? mobile)
+    (define (torque branch)
+      (* (branch-length branch) (total-branch-weight branch)))
+    (let ((left-torque (torque (left-branch mobile)))
+          (right-torque (torque (right-branch mobile))))
+      ;(display "lt = ") (display left-torque) (newline)
+      ;(display "rt = ") (display right-torque) (newline)
+      (and (= left-torque right-torque)
+           (or (number? (branch-structure (left-branch mobile))) (balanced? (branch-structure (left-branch mobile))))
+           (or (number? (branch-structure (right-branch mobile))) (balanced? (branch-structure (right-branch mobile)))))))
+
+  (display "exercise 2.29") (newline)
+
+  (define x (make-mobile (make-branch 3 4)
+                         (make-branch 3 (make-mobile (make-branch 4 5)
+                                                     (make-branch 6 7)))))
+
+  (define y (make-mobile (make-branch 1 3)
+                         (make-branch 1 2)))
+
+  (define un-balanced-mobile (make-mobile (make-branch 1 10)
+                                          (make-branch 2 (make-mobile (make-branch 1 3)
+                                                                      (make-branch 1 2)))))
+
+  (define balanced-mobile (make-mobile (make-branch 1 12)
+                                       (make-branch 2 (make-mobile (make-branch 1 4)
+                                                                   (make-branch 2 2)))))
+
+  (display "total weigth ") (display x) (display " = ") (display (total-weight x)) (newline)
+  (display "total weight ") (display y) (display " = ") (display (total-weight y)) (newline)
+  (display "balanced? ") (display x) (display ": ") (display (balanced? x)) (newline)
+  (display "balanced? ") (display un-balanced-mobile) (display ": ") (display (balanced? un-balanced-mobile)) (newline)
+  (display "balanced? ") (display balanced-mobile) (display ": ") (display (balanced? balanced-mobile)) (newline)
+  (newline))
+(exercise-2-29)
+
+(define (exercise-2-29-d)
+  (define (make-mobile left right)
+    (cons left right))
+
+  (define (make-branch length structure)
+    (cons length structure))
+
+  (define (left-branch mobile)
+    (car mobile))
+  (define (right-branch mobile)
+    (cdr mobile))
+  (define (branch-length branch)
+    (car branch))
+  (define (branch-structure branch)
+    (cdr branch))
+
+  (define (total-branch-weight branch)
+    (if (number? (branch-structure branch))
+        (branch-structure branch)
+        (total-weight (branch-structure branch))))
+
+  (define (total-weight mobile)
+    (+ (total-branch-weight (left-branch mobile))
+       (total-branch-weight (right-branch mobile))))
+
+  (define (balanced? mobile)
+    (define (torque branch)
+      (* (branch-length branch) (total-branch-weight branch)))
+    (let ((left-torque (torque (left-branch mobile)))
+          (right-torque (torque (right-branch mobile))))
+      ;(display "lt = ") (display left-torque) (newline)
+      ;(display "rt = ") (display right-torque) (newline)
+      (and (= left-torque right-torque)
+           (or (number? (branch-structure (left-branch mobile))) (balanced? (branch-structure (left-branch mobile))))
+           (or (number? (branch-structure (right-branch mobile))) (balanced? (branch-structure (right-branch mobile)))))))
+
+  (display "exercise 2.29.d") (newline)
+
+  (define x (make-mobile (make-branch 3 4)
+                         (make-branch 3 (make-mobile (make-branch 4 5)
+                                                     (make-branch 6 7)))))
+
+  (define y (make-mobile (make-branch 1 3)
+                         (make-branch 1 2)))
+
+  (define un-balanced-mobile (make-mobile (make-branch 1 10)
+                                          (make-branch 2 (make-mobile (make-branch 1 3)
+                                                                      (make-branch 1 2)))))
+
+  (define balanced-mobile (make-mobile (make-branch 1 12)
+                                       (make-branch 2 (make-mobile (make-branch 1 4)
+                                                                   (make-branch 2 2)))))
+
+  (display "total weigth ") (display x) (display " = ") (display (total-weight x)) (newline)
+  (display "total weight ") (display y) (display " = ") (display (total-weight y)) (newline)
+  (display "balanced? ") (display x) (display ": ") (display (balanced? x)) (newline)
+  (display "balanced? ") (display un-balanced-mobile) (display ": ") (display (balanced? un-balanced-mobile)) (newline)
+  (display "balanced? ") (display balanced-mobile) (display ": ") (display (balanced? balanced-mobile)) (newline)
+  (newline))
+(exercise-2-29-d)
