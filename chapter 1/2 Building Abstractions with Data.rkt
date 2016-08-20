@@ -638,3 +638,62 @@
   (display "balanced? ") (display balanced-mobile) (display ": ") (display (balanced? balanced-mobile)) (newline)
   (newline))
 (exercise-2-29-d)
+
+(define (exercise-2-30)
+  (define (square x) (* x x))
+
+  (define (square-tree-1 tree)
+    (cond ((null? tree) nil)
+          ((not (pair? tree)) (square tree))
+          (else (cons (square-tree-1 (car tree))
+                      (square-tree-1 (cdr tree))))))
+
+  (define (square-tree-2 tree)
+    (map (lambda (tree)
+           (if (pair? tree)
+               (square-tree-2 tree)
+               (square tree)))
+         tree))
+
+  (display "exercise 2.30") (newline)
+  (define x (list 1
+                  (list 2 (list 3 4) 5)
+                  (list 6 7)))
+
+  (display "test 1: ") (display (square-tree-1 x)) (newline)
+  (display "test 2: ") (display (square-tree-2 x)) (newline)
+  (newline))
+(exercise-2-30)
+
+(define (exercise-2-31)
+  (define (square x) (* x x))
+
+  (define (tree-map f tree)
+    (map (lambda (tree)
+           (if (pair? tree)
+               (tree-map f tree)
+               (f tree)))
+         tree))
+
+  (display "exercise 2.31") (newline)
+  (define x (list 1
+                  (list 2 (list 3 4) 5)
+                  (list 6 7)))
+
+  (display "(tree-map square x) = ") (display (tree-map square x)) (newline)
+  (newline))
+(exercise-2-31)
+
+(define (exercise-2-32)
+  (define (subsets s)
+    ;(display "s = ") (display s) (newline)
+    (if (null? s)
+        (list nil)
+        (let ((rest (subsets (cdr s))))
+          ;(display "rest = ") (display rest) (display ", (car s) = ") (display (car s)) (newline)
+          (append rest (map (lambda (x) (cons (car s) x)) rest)))))
+
+  (display "exercise 2.32") (newline)
+  (display (subsets (list 1 2 3))) (newline)
+  (newline))
+(exercise-2-32)
