@@ -697,3 +697,175 @@
   (display (subsets (list 1 2 3))) (newline)
   (newline))
 (exercise-2-32)
+
+(define (exercise-2-33)
+  (define (square x) (* x x))
+
+  (define (accumulate op initial sequence)
+    (if (null? sequence)
+        initial
+        (op (car sequence)
+            (accumulate op initial (cdr sequence)))))
+
+  (define (map p sequence)
+    (accumulate (lambda (x y) (cons (p x) y)) nil sequence))
+
+  (define (append seq1 seq2)
+    (accumulate cons seq2 seq1))
+
+  (define (length sequence)
+    (accumulate (lambda (x y) (inc y)) 0 sequence))
+
+  (display "exercise 2.33") (newline)
+  (display "(map square (list 1 2 3)) = ") (display (map square (list 1 2 3))) (newline)
+  (display "(append (list 1 2 3) (list 4 5 6)) = ") (display (append (list 1 2 3) (list 4 5 6))) (newline)
+  (display "(length nil) = ") (display (length nil)) (newline)
+  (display "(length (list 1 2 3)) = ") (display (length (list 1 2 3))) (newline)
+  (newline))
+(exercise-2-33)
+
+(define (exercise-2-34)
+  (define (square x) (* x x))
+
+  (define (accumulate op initial sequence)
+    (if (null? sequence)
+        initial
+        (op (car sequence)
+            (accumulate op initial (cdr sequence)))))
+
+  (define (horner-eval x coefficient-sequence)
+    (accumulate (lambda (this-coeff higher-term) (+ this-coeff (* x higher-term)))
+                0
+                coefficient-sequence))
+
+  (display "exercise 2.34") (newline)
+  (display "(horner-eval 2 (list 1 3 0 5 0 1)) = ") (display (horner-eval 2 (list 1 3 0 5 0 1))) (newline)
+  (newline))
+(exercise-2-34)
+
+(define (exercise-2-35)
+  (define (square x) (* x x))
+
+  (define (accumulate op initial sequence)
+    (if (null? sequence)
+        initial
+        (op (car sequence)
+            (accumulate op initial (cdr sequence)))))
+
+  (define (count-leaves tree)
+    (accumulate + 0 (map (lambda (x) (cond ((null? x) 0)
+                                           ((not (pair? x)) 1)
+                                           (else (count-leaves x))))
+                         tree)))
+
+  (display "exercise 2.35") (newline)
+  (define x (cons (list 1 2) (list 3 4)))
+  (display "(count-leaves x) = ") (display (count-leaves x)) (newline)
+  (display "(count-leaves (list x x)) = ") (display (count-leaves (list x x))) (newline)
+  (newline))
+(exercise-2-35)
+
+(define (exercise-2-36)
+  (define (square x) (* x x))
+
+  (define (accumulate op initial sequence)
+    (if (null? sequence)
+        initial
+        (op (car sequence)
+            (accumulate op initial (cdr sequence)))))
+
+  (define (accumulate-n op initial sequences)
+    (if (null? (car sequences))
+        nil
+        (cons (accumulate op initial (map car sequences))
+              (accumulate-n op initial (map cdr sequences)))))
+
+  (display "exercise 2.36") (newline)
+  (define x (list (list 1 2 3) (list 4 5 6) (list 7 8 9) (list 10 11 12)))
+  ;(display (map car x)) (newline)
+  (display "(accumulate-n + 0 x) = ") (display (accumulate-n + 0 x)) (newline)
+  (newline))
+(exercise-2-36)
+
+(define (exercise-2-37)
+  (define (square x) (* x x))
+
+  (define (accumulate op initial sequence)
+    (if (null? sequence)
+        initial
+        (op (car sequence)
+            (accumulate op initial (cdr sequence)))))
+
+  (define (accumulate-n op initial sequences)
+    (if (null? (car sequences))
+        nil
+        (cons (accumulate op initial (map car sequences))
+              (accumulate-n op initial (map cdr sequences)))))
+
+  (define (dot-product v w)
+    (accumulate + 0 (map * v w)))
+
+  (define (matrix-*-vector m v)
+    (map (lambda (row) (dot-product row v)) m))
+
+  (define (transpose m)
+    (accumulate-n cons nil m))
+
+  (define (matrix-*-matrix m n)
+    (let ((cols (transpose n)))
+      (map (lambda (row)
+             (map (lambda (col)
+                    ;(display "row =") (display row) (display ", col = ") (display col) (newline)
+                    (dot-product row col))
+                  cols))
+           m)))
+
+  (display "exercise 2.37") (newline)
+  (define v1 (list 1 2 3 4))
+  (define v2 (list 4 5 6 6))
+  (define v3 (list 6 7 8 9))
+  (define m (list v1 v2 v3))
+  (define n (list (list 1) (list 1) (list 1) (list 1)))
+  (display "(dot-product v1 v2) = ") (display (dot-product v1 v2)) (newline)
+  (display "(matrix-*-vector m v1) = ") (display (matrix-*-vector m v1)) (newline)
+  (display "(transpose m) = ") (display (transpose m)) (newline)
+  (display "(matrix-*-matrix m n)") (display (matrix-*-matrix m n)) (newline)
+  (newline))
+(exercise-2-37)
+
+(define (exercise-2-38)
+  (define (accumulate op initial sequence)
+    (if (null? sequence)
+        initial
+        (op (car sequence)
+            (accumulate op initial (cdr sequence)))))
+
+  (define (accumulate-n op initial sequences)
+    (if (null? (car sequences))
+        nil
+        (cons (accumulate op initial (map car sequences))
+              (accumulate-n op initial (map cdr sequences)))))
+
+  (define (fold-right op initial sequence)
+    (accumulate op initial sequence))
+
+  (define (fold-left op initial sequence)
+    (define (iter result sequence)
+      (if (null? sequence)
+          result
+          (iter (op (car sequence) result) (cdr sequence))))
+    (iter initial sequence))
+
+  (define (reverse-right sequence)
+    (define (append x y)
+      (accumulate cons y x))
+    (fold-right (lambda (x y) (append y (list x))) nil sequence))
+
+  (define (reverse-left sequence)
+    (fold-left cons nil sequence))
+
+  (display "exercise 2.38") (newline)
+  (display "") (display (reverse-right (list 1 2 3 4))) (newline)
+  (display "") (display (reverse-left (list 1 2 3 4))) (newline)
+  (newline))
+(exercise-2-38)
