@@ -1,5 +1,7 @@
 #lang sicp
 
+(#%require math/number-theory)
+
 (define (exercise-2-1)
   (define (mk-rat n d)
     (let ((g (gcd n d)))
@@ -869,3 +871,93 @@
   (display "") (display (reverse-left (list 1 2 3 4))) (newline)
   (newline))
 (exercise-2-38)
+
+(define (exercise-2-40)
+  (define (accumulate op initial sequence)
+    (if (null? sequence)
+        initial
+        (op (car sequence)
+            (accumulate op initial (cdr sequence)))))
+
+  (define (filter f seq)
+    (cond ((null? seq) nil)
+          ((f (car seq)) (cons (car seq) (filter f (cdr seq))))
+          (else (filter f (cdr seq)))))
+
+  (define (append m n)
+    (accumulate cons n m))
+
+  (define (flatmap f lst)
+    (accumulate append nil (map f lst)))
+
+  (define (enumerate beg end)
+    (define (iter i)
+      (if (= i end)
+          nil
+          (cons i (iter (inc i)))))
+    (iter beg))
+
+  (define (unique-pairs n)
+    (flatmap (lambda (i) (map (lambda (j) (list j i)) (enumerate 1 i))) (enumerate 2 (inc n))))
+
+  (define (prime-sum? p)
+    (prime? (+ (car p) (cadr p))))
+
+  (define (make-pair-sum p)
+    (append p (list (+ (car p) (cadr p)))))
+
+  (define (prime-sum-pairs n)
+    (map make-pair-sum
+         (filter prime-sum?
+                 (unique-pairs n))))
+
+  (display "exercise 2.40") (newline)
+  (display "test append: ") (display (append (list 1 2) (list 3 4))) (newline)
+  (display "test unique-pairs: ") (display (unique-pairs 4)) (newline)
+  (display "test prime-sum-pairs: ") (display (prime-sum-pairs 6)) (newline)
+  (newline))
+(exercise-2-40)
+
+(define (exercise-2-41)
+  (define (accumulate op initial sequence)
+    (if (null? sequence)
+        initial
+        (op (car sequence)
+            (accumulate op initial (cdr sequence)))))
+
+  (define (filter f seq)
+    (cond ((null? seq) nil)
+          ((f (car seq)) (cons (car seq) (filter f (cdr seq))))
+          (else (filter f (cdr seq)))))
+
+  (define (append m n)
+    (accumulate cons n m))
+
+  (define (flatmap f lst)
+    (accumulate append nil (map f lst)))
+
+  (define (enumerate beg end)
+    (if (> beg end)
+        nil
+        (cons beg (enumerate (inc beg) end))))
+
+  (define (distinct? a b c)
+    (and (not (= a b))
+         (not (= a c))
+         (not (= b c))))
+
+  (define (generate-triplets n s)
+    (filter (lambda (triplet) (and (= s (+ (car triplet) (cadr triplet) (caddr triplet)))
+                                   (distinct? (car triplet) (cadr triplet) (caddr triplet))))
+            (flatmap (lambda (i)
+                       (flatmap (lambda (j)
+                                  (map (lambda (k) (list i j k))
+                                       (enumerate 1 n)))
+                                (enumerate 1 n)))
+                     (enumerate 1 n))))
+
+  (display "exercise 2.41") (newline)
+  (display "test enumerate: ") (display (enumerate 1 5)) (newline)
+  (display "test: ") (display (generate-triplets 10 8)) (newline)
+  (newline))
+(exercise-2-41)
