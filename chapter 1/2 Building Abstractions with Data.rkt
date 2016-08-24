@@ -961,3 +961,130 @@
   (display "test: ") (display (generate-triplets 10 8)) (newline)
   (newline))
 (exercise-2-41)
+
+(define (exercise-2-42)
+  (define (accumulate op initial sequence)
+    (if (null? sequence)
+        initial
+        (op (car sequence)
+            (accumulate op initial (cdr sequence)))))
+
+  (define (filter f seq)
+    (cond ((null? seq) nil)
+          ((f (car seq)) (cons (car seq) (filter f (cdr seq))))
+          (else (filter f (cdr seq)))))
+
+  (define (append m n)
+    (accumulate cons n m))
+
+  (define (flatmap f lst)
+    (accumulate append nil (map f lst)))
+
+  (define (enumerate beg end)
+    (if (> beg end)
+        nil
+        (cons beg (enumerate (inc beg) end))))
+
+  (define (empty-board) nil)
+
+  (define (find n lst)
+    (cond ((null? lst) nil)
+          ((= n (car lst)) lst)
+          (else (find n (cdr lst)))))
+
+  (define (remove-duplicates lst)
+    (accumulate (lambda (elt result-lst)
+                  (if (null? (find elt result-lst))
+                      (cons elt result-lst)
+                      result-lst))
+                nil
+                lst))
+
+  (define (same-lists? lst1 lst2)
+    (cond ((null? lst1) (null? lst2))
+          ((null? lst2) (null? lst1))
+          (else (and (= (car lst1) (car lst2))
+                     (same-lists? (cdr lst1) (cdr lst2))))))
+
+  (define (are-all-rows-unique? board)
+    (same-lists? board (remove-duplicates board)))
+
+  (define (is-diagonals-free? lower-row upper-row board)
+    (cond ((null? board) nil)
+          ((or (= lower-row (car board)) (= upper-row (car board))) board)
+          (else (is-diagonals-free? (dec lower-row) (inc upper-row) (cdr board)))))
+
+  (define (safe? board)
+    (and (are-all-rows-unique? board)
+         (null? (is-diagonals-free? (dec (car board)) (inc (car board)) (cdr board)))))
+
+  (define (adjoint-position row board)
+    (cons row board))
+
+  (define (queens n)
+    (define (queens-col k)
+      (if (= k 0)
+          (list (empty-board))
+          (let ((result (flatmap
+                         (lambda (board)
+                           (map
+                            (lambda (r) (adjoint-position r board))
+                            (enumerate 0 (dec n))))
+                         (queens-col (dec k)))))
+            ;(display "result=") (display result) (newline)
+            (filter safe? result))))
+      (queens-col n))
+
+  (display "exercise 2.42") (newline)
+  (display "test find:") (newline)
+  (display (find 3 (list 1 2 3 4 3 4 3))) (newline)
+  (display (find 3 (list 1 2 4 4))) (newline)
+  (display (find 1 (list 2 4))) (newline)
+
+  (display "test remove-duplicates:") (newline)
+  (display (remove-duplicates nil)) (newline)
+  (display (remove-duplicates (list 1 2 3 4 3 4 3))) (newline)
+  (display (remove-duplicates (list 1 2 4 4))) (newline)
+  (display (remove-duplicates (list 1 2 4))) (newline)
+
+  (display "test same-lists?:") (newline)
+  (display (same-lists? nil (list 1 2))) (newline)
+  (display (same-lists? (list 1 2) nil)) (newline)
+  (display (same-lists? (list 1) (list 2))) (newline)
+  (display (same-lists? (list 1 2) (list 1))) (newline)
+  (display (same-lists? (list 1 2) (list 2))) (newline)
+  (display (same-lists? (list 1 2) (list 1 2))) (newline)
+  (display (same-lists? nil nil)) (newline)
+
+  (display "test are-all-rows-unique?:") (newline)
+  (display (are-all-rows-unique? (list 1 2 3))) (newline)
+  (display (are-all-rows-unique? (list 1 1 1))) (newline)
+  (display (are-all-rows-unique? (list 1 2 1))) (newline)
+
+  (display "test is-diagonals-free?:") (newline)
+  (display (null? (is-diagonals-free? 1 3 (list 3 3 3)))) (newline)
+  (display (null? (is-diagonals-free? 1 3 (list 2 3 1 0)))) (newline)
+
+  (display "test safe?:") (newline)
+  (display (safe? (list 1 2 3))) (newline)
+  (display (safe? (list 1 1 1))) (newline)
+  (display (safe? (list 1 2 1))) (newline)
+  (display (safe? (list 3 3 3))) (newline)
+  (display (safe? (list 1 3 2 4))) (newline)
+  (display (safe? (list 4 2 3 1))) (newline)
+  (display (safe? (list 1 3 2 0))) (newline)
+
+  (display "test queens:") (newline)
+  (display (enumerate 0 0)) (newline)
+  (display (enumerate 0 3)) (newline)
+  ;(display (queens 1)) (newline)
+  ;(display (queens 2)) (newline)
+  ;(display (queens 3)) (newline)
+  ;(display (queens 4)) (newline)
+  ;(display (queens 5)) (newline)
+  ;(display (queens 6)) (newline)
+  ;(display (queens 7)) (newline)
+  ;(display (queens 8)) (newline)
+
+  (newline))
+(exercise-2-42)
